@@ -1,5 +1,6 @@
 package es.na8;
 
+import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.Collection;
 
 import org.jivesoftware.smack.Chat;
@@ -15,10 +16,10 @@ import org.jivesoftware.smack.packet.Presence;
 
 public class MySmackDemo implements MessageListener {
 
-public static String username="iciscar.bull@gmail.com";
-public static String userContact="nachociscar@gmail.com";
+public  String username="";//"iciscar.bull@gmail.com";
+public  String userContact="";//"nachociscar@gmail.com";
 
-public static String password="squidsquid";
+public  String password="";//
 public static String id="";
 static ConnectionConfiguration config;
 
@@ -31,8 +32,19 @@ public static boolean free=false;
 
 public static void main(String args[]){
 
-    System.out.println("... in main function .......");
+    System.out.println("$> java -jar SmackNa8.jar piacount@gmail.com password userContact@gmail.com");
+   
     MySmackDemo mySmackObj = new MySmackDemo();
+    if(args.length == 3){
+    	
+    	mySmackObj.username = args[0];
+    	mySmackObj.password = args[1];
+    	mySmackObj.userContact = args[2];
+    	
+    }else{
+    	System.out.println("Args needed");
+    	return;
+    }
     mySmackObj.connectTOGTalk();
 
     mySmackObj.displayBuddyList();
@@ -42,7 +54,7 @@ public static void main(String args[]){
 
     try {
 
-   mySmackObj.sendMessage("RaspBerry Pi Conectada", "nachociscar@gmail.com");
+   mySmackObj.sendMessage("RaspBerry Pi Connected", mySmackObj.userContact);
    System.out.println("Pulsa una tecla para terminar");
    System.in.read();
    
@@ -77,7 +89,7 @@ private  void connectTOGTalk(){
 
         Presence presence = new Presence(Presence.Type.available);
         connection.sendPacket(presence);
-        System.out.println("presence is ............" + presence.toXML());
+        System.out.println("presence is:" + presence.toXML());
 
     }
     catch (Exception e) {
@@ -90,8 +102,8 @@ private  void connectTOGTalk(){
  */
 public  void sendMessage(String message, String to) 
 {
-    System.out.println("Message is ......."+message);
-    Chat chat = connection.getChatManager().createChat(to, new MySmackDemo());
+    System.out.println("Message is:"+message);
+    Chat chat = connection.getChatManager().createChat(to, this);
     try {
 		chat.sendMessage(message);
 	} catch (XMPPException e) {
@@ -99,7 +111,7 @@ public  void sendMessage(String message, String to)
 		e.printStackTrace();
 	}
 
-            System.out.println("Chat obj is ........"+ chat);
+            System.out.println("Chat obj is:"+ chat);
 }
 /**
  * Function to display user list
@@ -127,7 +139,9 @@ System.out.println(chat.getParticipant() + " says: " + message.getBody());
 		if(accion.equalsIgnoreCase("IP")){
 			Run run = new Run();
 			String ip= run.getIP();
-			sendMessage("La ip es:"+ip, userContact );
+			sendMessage("The IP:"+ip, userContact );
+			}else{
+			sendMessage("You are talking with a raspberry", userContact );
 			}
 	}
 	
